@@ -1,0 +1,88 @@
+Introduction to Cftc Autotest   
+
+   
+CiscoAt to replace manual operation by python design related program .It will more convenient and efficient .You can have more time to pursue issues dearer to your hearts .You don¨t have to stare at the computer .Saving time and manpower .To some extent ,reduce the error rate .Facilitate integrated management ,help to optimize systems upgrade.
+
+
+1.Installation of Cftc Autotest environment
+
+A compuer with Python(v2.7) Scripts runs on top of Ubuntu13.04 64Bit. 
+Install the following plug-ins in advance.
+　　　# Install apt-get python-pip
+　　　# pip install requests
+　　　# pip install progressbar
+　　　# pip install pexpect
+　　　# pip install python-boxcar
+
+
+2.Preparation of Cftc Autotest
+
+First , we got CUCM Upgrade ISO 
+Second, we make a new xml profile with the same name, which contents info about CUCM cluster. 
+　Xml contents like these:   
+		EXSI host IP 
+		EXSI host username 
+		EXSI host password 
+		EXSI host datastore 
+		EXSI host datacenter 
+		Upgrade ISO MD5 
+		Upgrade VM info
+		Path,ip,user,password 
+
+
+Xml eg:
+
+<?xml version="1.0"?>
+ <CUCMISO>
+  <hostip>172.16.128.203</hostip>
+  <hostuser>root</hostuser>
+  <hostpassword>Cisc012$</hostpassword>
+  <datastore>datastore911re</datastore>
+  <datacenter>ha-datacenter</datacenter>
+  <MD5>78802660C49B2A2C825B1FD85F41BC50</MD5>
+  <pubcucmvm>[datastore911re] cucm-pub/cucm-pub.vmx</pubcucmvm>
+  <pubcucmip>10.22.223.2</pubcucmip>
+  <pubcucmuser>cisco</pubcucmuser>
+  <pubcucmpassword>Cisc012$</pubcucmpassword>
+  <subcucmvm>[datastore911re] cucm-sub/cucm-sub.vmx</subcucmvm>
+  <subcucmip>10.22.223.3</subcucmip>
+  <subcucmuser>cisco</subcucmuser>
+  <subcucmpassword>Cisc012$</subcucmpassword>
+</CUCMISO>
+
+
+
+Then preparation steps is 
+ISO MD5 check   
+Contrast the calculated MD5 value with the MD5 value read from the xml profile 
+CUCM version check  
+Get the cucm upgrade version from the ISO filename 
+Refresh update       
+Refresh upgrade will be executed twice, one for Pub cluster and the other for Sub cluster 
+Upload ISO    Upload the ISO to the datestore of the tested VM Will be stored in a folder which named by the upload datetime 
+Mount ISO  Change the CD/DVD configuration of the tested VM, mount the uploaded ISO 
+
+Finally, enter the order to run the program:    sudo python autotest.py /home/work/ISO/UCSInstall_UCOS_8.6.2.24086-1.sgn.iso 
+
+
+
+
+3.Warning
+
+a.We should keep the CD/DVD drive checkbox of VM setting be checked, When the script running. 
+
+b.User need to make sure the Vmware Tools is running.
+
+
+4.Analyze logs and failures
+
+If something error , the information will be sent to you(Edit your emails).
+You should modify the receiver in the scripts such as autotest.py and autest_web.py in line  29. just as shown bellow:
+
+sender = 'lijunsong@chuwasoft.com'
+psw = 're_jy'
+receiver = '821090701@qq.com' #modify here 
+smtpserver = 'mail.chuwasoft.com'
+
+
+
